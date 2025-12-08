@@ -1,6 +1,8 @@
 package com.example.watchnext
 
 import okhttp3.OkHttpClient
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,17 +13,22 @@ import retrofit2.http.Path
 // ---------- DATA CLASSES ----------
 
 // One movie / show item – matches elements inside the JSON array
+@Parcelize
 data class ImdbTitle(
     val id: String,
+    val url: String?,
     val primaryTitle: String?,
     val originalTitle: String?,
     val type: String?,
     val description: String?,
     val primaryImage: String?,
+    val releaseDate: String?,
     val startYear: Int?,
+    val runtimeMinutes: Int?,
+    val genres: List<String>?,
     val averageRating: Double?,
     val numVotes: Int?
-)
+) : Parcelable
 
 // ---------- API CONFIG ----------
 
@@ -35,9 +42,6 @@ object ApiConfig {
 // ---------- RETROFIT SERVICE ----------
 
 interface MovieApiService {
-
-    // GET https://imdb236.p.rapidapi.com/api/imdb/cast/nm0000190/titles
-    // The root response is a JSON ARRAY, so we return List<ImdbTitle>
     @GET("api/imdb/cast/{personId}/titles")
     suspend fun getCastTitles(
         @Path("personId") personId: String,

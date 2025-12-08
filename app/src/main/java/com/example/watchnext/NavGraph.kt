@@ -11,20 +11,37 @@ fun AppNavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = "login"
     ) {
-        composable("login") {
-            // This is your existing login UI composable
+        composable(route = "login") {
             AuthScreen(
                 onLoginSuccess = {
                     navController.navigate("home") {
-                        // Remove login from the back stack so back button doesn’t return there
                         popUpTo("login") { inclusive = true }
                     }
                 }
             )
         }
 
-        composable("home") {
-            HomeScreen()
+        composable(route = "home") {
+            HomeScreen(navController = navController)
+        }
+
+        // 🔥 NEW: details screen route
+        composable(route = "details") {
+            // We stored the movie in the previous back stack entry’s savedStateHandle
+            val movie = navController
+                .previousBackStackEntry
+                ?.savedStateHandle
+                ?.get<ImdbTitle>("selectedMovie")
+
+            if (movie != null) {
+                MovieDetailScreen(
+                    movie = movie,
+                    onBack = { navController.popBackStack() }
+                )
+            } else {
+                // simple fallback so it won't crash if something goes wrong
+                androidx.compose.material3.Text("No movie selected.")
+            }
         }
     }
 }
