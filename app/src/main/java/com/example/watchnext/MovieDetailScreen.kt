@@ -2,8 +2,13 @@ package com.example.watchnext
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -18,18 +23,18 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.layout.ContentScale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetailScreen(
-    movie: ImdbTitle,
-    onBack: () -> Unit
+    navController: NavHostController,
+    movie: ImdbTitle
 ) {
     val context = LocalContext.current
 
@@ -38,7 +43,7 @@ fun MovieDetailScreen(
             TopAppBar(
                 title = { Text(text = movie.primaryTitle ?: "No title") },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
@@ -48,7 +53,7 @@ fun MovieDetailScreen(
             )
         },
         bottomBar = {
-            BottomMenuBar()   // ⬅️ reuse the same bar
+            BottomMenuBar(navController = navController)
         }
     ) { padding ->
         Column(
@@ -64,7 +69,7 @@ fun MovieDetailScreen(
                     model = posterUrl,
                     contentDescription = movie.primaryTitle,
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .height(220.dp)
                         .clip(RoundedCornerShape(16.dp)),
                     contentScale = ContentScale.Crop
@@ -112,7 +117,7 @@ fun MovieDetailScreen(
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(imdbUrl))
                         context.startActivity(intent)
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     Text("Watch trailer / see more on IMDb")
                 }

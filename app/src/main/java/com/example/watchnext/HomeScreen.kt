@@ -1,9 +1,18 @@
 package com.example.watchnext
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -18,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,11 +40,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +54,7 @@ fun HomeScreen(
     val moviesState = remember { mutableStateOf<List<ImdbTitle>?>(null) }
     val errorState = remember { mutableStateOf<String?>(null) }
 
-    // Call API once when screen starts
+    // Load movies once
     LaunchedEffect(Unit) {
         try {
             val response = withContext(Dispatchers.IO) {
@@ -59,7 +69,14 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Shared Watchlist") }
+                title = { Text("Shared Watchlist") },
+                actions = {
+                    TextButton(
+                        onClick = { navController.navigate("voting") }
+                    ) {
+                        Text("Voting")
+                    }
+                }
             )
         },
         floatingActionButton = {
@@ -73,7 +90,7 @@ fun HomeScreen(
             }
         },
         bottomBar = {
-            BottomMenuBar()
+            BottomMenuBar(navController = navController)
         }
     ) { padding ->
         Box(
@@ -130,14 +147,12 @@ fun HomeScreen(
 }
 
 @Composable
-fun BottomMenuBar() {
-    // Outer container
+fun BottomMenuBar(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        // Rounded “card” like your mock
         androidx.compose.material3.Surface(
             shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
             tonalElevation = 2.dp,
@@ -150,22 +165,35 @@ fun BottomMenuBar() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                BottomMenuItem("Home")
-                BottomMenuItem("Votes")
-                BottomMenuItem("Add")
-                BottomMenuItem("History")
-                BottomMenuItem("Settings")
+                BottomMenuItem("Home") {
+                    // You're already on home; no-op for now
+                }
+                BottomMenuItem("Votes") {
+                    navController.navigate("voting")
+                }
+                BottomMenuItem("Add") {
+                    // TODO: later
+                }
+                BottomMenuItem("History") {
+                    // TODO: later
+                }
+                BottomMenuItem("Settings") {
+                    // TODO: later
+                }
             }
         }
     }
 }
 
 @Composable
-private fun BottomMenuItem(label: String) {
+private fun BottomMenuItem(
+    label: String,
+    onClick: () -> Unit
+) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { onClick() }
     ) {
-        // Little rounded square “icon”
         Box(
             modifier = Modifier
                 .size(24.dp)
@@ -190,7 +218,7 @@ private fun MovieRow(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),          // ⬅️ tap row to open details
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -199,7 +227,6 @@ private fun MovieRow(
                 .fillMaxWidth()
                 .padding(12.dp)
         ) {
-            // Poster (or placeholder)
             if (movie.primaryImage != null) {
                 AsyncImage(
                     model = movie.primaryImage,
@@ -246,7 +273,6 @@ private fun MovieRow(
 
             Spacer(Modifier.width(8.dp))
 
-            // Right side: rating & status chip (votes removed)
             Column(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.SpaceBetween,
