@@ -63,6 +63,21 @@ fun AppNavGraph(
         composable("voting") {
             VotingScreen(navController = navController)
         }
+
+        // 5) AddMovie SCREEN
+        composable("addMovie") {
+            AddMovieScreen(
+                navController = navController,
+                onAddMovie = { movie ->
+                    // Add to HomeScreen list
+                    // Example: use a shared ViewModel or pass via SavedStateHandle
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("newMovie", movie)
+                }
+            )
+        }
+
     }
 }
 

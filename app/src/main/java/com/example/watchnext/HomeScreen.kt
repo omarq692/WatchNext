@@ -2,37 +2,15 @@ package com.example.watchnext
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +31,17 @@ fun HomeScreen(
 ) {
     val moviesState = remember { mutableStateOf<List<ImdbTitle>?>(null) }
     val errorState = remember { mutableStateOf<String?>(null) }
+
+    // --- Add this block to handle a new movie returned from AddMovieScreen ---
+    val newMovie = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.get<ImdbTitle>("newMovie")
+
+    newMovie?.let {
+        moviesState.value = listOf(it) + (moviesState.value ?: emptyList())
+        navController.currentBackStackEntry?.savedStateHandle?.remove<ImdbTitle>("newMovie")
+    }
+    // --------------------------------------------------------------------------
 
     // Load movies once
     LaunchedEffect(Unit) {
@@ -82,7 +71,7 @@ fun HomeScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    // TODO: navigate to AddMovie screen later
+                    navController.navigate("addMovie") // <-- now navigates to Add Movie screen
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
@@ -130,11 +119,9 @@ fun HomeScreen(
                             MovieRow(
                                 movie = movie,
                                 onClick = {
-                                    // Save selected movie in back stack & navigate
                                     navController.currentBackStackEntry
                                         ?.savedStateHandle
                                         ?.set("selectedMovie", movie)
-
                                     navController.navigate("details")
                                 }
                             )
@@ -153,7 +140,7 @@ fun BottomMenuBar(navController: NavHostController) {
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        androidx.compose.material3.Surface(
+        Surface(
             shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
             tonalElevation = 2.dp,
             color = MaterialTheme.colorScheme.surface
@@ -165,21 +152,11 @@ fun BottomMenuBar(navController: NavHostController) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                BottomMenuItem("Home") {
-                    // You're already on home; no-op for now
-                }
-                BottomMenuItem("Votes") {
-                    navController.navigate("voting")
-                }
-                BottomMenuItem("Add") {
-                    // TODO: later
-                }
-                BottomMenuItem("History") {
-                    // TODO: later
-                }
-                BottomMenuItem("Settings") {
-                    // TODO: later
-                }
+                BottomMenuItem("Home") { }
+                BottomMenuItem("Votes") { navController.navigate("voting") }
+                BottomMenuItem("Add") { navController.navigate("addMovie") } // optional
+                BottomMenuItem("History") { }
+                BottomMenuItem("Settings") { }
             }
         }
     }
@@ -200,9 +177,7 @@ private fun BottomMenuItem(
                 .clip(RoundedCornerShape(6.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
         )
-
         Spacer(Modifier.height(4.dp))
-
         Text(
             text = label,
             style = MaterialTheme.typography.labelMedium
