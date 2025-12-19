@@ -2,11 +2,7 @@ package com.example.watchnext
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -69,7 +65,7 @@ fun MovieDetailScreen(
                     model = posterUrl,
                     contentDescription = movie.primaryTitle,
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .height(220.dp)
                         .clip(RoundedCornerShape(16.dp)),
                     contentScale = ContentScale.Crop
@@ -117,7 +113,7 @@ fun MovieDetailScreen(
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(imdbUrl))
                         context.startActivity(intent)
                     },
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Watch trailer / see more on IMDb")
                 }

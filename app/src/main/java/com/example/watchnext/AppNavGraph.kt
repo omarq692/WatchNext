@@ -35,6 +35,10 @@ fun AppNavGraph(
             HomeScreen(navController = navController)
         }
 
+        composable("watchList") {
+            WatchListScreen(navController = navController)
+        }
+
         // 3) DETAILS SCREEN
         composable("details") { backStackEntry ->
             // We stored the movie in the previous back stack entry's SavedStateHandle
