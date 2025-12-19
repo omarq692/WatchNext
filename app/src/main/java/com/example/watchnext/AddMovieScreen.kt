@@ -125,18 +125,24 @@ fun AddMovieScreen(
                             numVotes = null
                         )
 
+                        // Add to global watchlist
+                        WatchListRepository.addMovie(newItem)
+
+                        // Optional: store in savedStateHandle if you navigate back and want to pass data
                         navController.previousBackStackEntry
                             ?.savedStateHandle
                             ?.set("newMovie", newItem)
 
+                        // Go back to previous screen
                         navController.popBackStack()
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Add to WatchList")
+                Text("Add to Watch List")
             }
+
         }
     }
 }

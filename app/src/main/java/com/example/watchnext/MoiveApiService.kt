@@ -33,8 +33,7 @@ data class ImdbTitle(
 // ---------- API CONFIG ----------
 
 object ApiConfig {
-    const val RAPID_API_KEY = "514f9ec567msha8d463c4875bcafp1ca8a9jsn74fbd590692e"
-        //"ebb95589f2msh2cbbe8cbe037d57p1a459ajsnd9bb03a75c47"  // <- your key
+    const val RAPID_API_KEY = "d83122ab6cmsh639f1687ec9a268p12b384jsn9a0d1478ae45"
 
     const val RAPID_API_HOST = "imdb236.p.rapidapi.com"
     const val BASE_URL = "https://imdb236.p.rapidapi.com/"
