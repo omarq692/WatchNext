@@ -44,7 +44,7 @@ fun WatchListScreen(
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
-            // Header
+            // Header for app
             Text(
                 text = "WatchedList",
                 style = MaterialTheme.typography.titleLarge,
