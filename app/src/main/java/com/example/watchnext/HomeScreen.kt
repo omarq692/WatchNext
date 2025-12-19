@@ -58,7 +58,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Shared Watchlist") },
+                title = { Text("Trending") },
                 actions = {
                     TextButton(
                         onClick = { navController.navigate("voting") }
@@ -152,11 +152,11 @@ fun BottomMenuBar(navController: NavHostController) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                BottomMenuItem("Home") { }
+                BottomMenuItem("Trending") { navController.navigate("home") }
                 BottomMenuItem("Votes") { navController.navigate("voting") }
                 BottomMenuItem("Add") { navController.navigate("addMovie") } // optional
-                BottomMenuItem("History") { }
-                BottomMenuItem("Settings") { }
+                BottomMenuItem("WatchList") { navController.navigate("watchList") }
+                BottomMenuItem("Settings") { navController.navigate("settings") }
             }
         }
     }

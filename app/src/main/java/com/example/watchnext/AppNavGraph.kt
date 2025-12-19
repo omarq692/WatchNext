@@ -78,6 +78,10 @@ fun AppNavGraph(
             )
         }
 
+        // 6) SETTINGS SCREEN
+        composable("settings") {
+            SettingsScreen(navController = navController)
+        }
     }
 }
 
