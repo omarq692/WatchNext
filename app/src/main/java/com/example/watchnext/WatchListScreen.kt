@@ -31,7 +31,7 @@ fun WatchListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Watched History") }
+                title = { Text("WatchedList") }
             )
         },
         bottomBar = {
@@ -46,7 +46,7 @@ fun WatchListScreen(
         ) {
             // Header
             Text(
-                text = "Watched History",
+                text = "WatchedList",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )
