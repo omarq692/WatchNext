@@ -104,7 +104,7 @@ fun AuthScreen(
                 value = email,
                 onValueChange = { email = it },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Email") },
+                label = { Text("Username") },
                 singleLine = true
             )
 

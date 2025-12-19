@@ -111,44 +111,6 @@ fun SettingsScreen(
                 }
             }
 
-            // ---- Preferences ----
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(2.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Preferences",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-
-                    Spacer(Modifier.height(12.dp))
-
-                    SettingToggleRow(
-                        title = "Show IMDb ratings",
-                        description = "Display star ratings on movie cards.",
-                        checked = showRatingsState.value,
-                        onCheckedChange = { checked ->
-                            showRatingsState.value = checked
-                            settingsPrefs.edit().putBoolean(KEY_SHOW_RATINGS, checked).apply()
-                        }
-                    )
-
-                    Spacer(Modifier.height(12.dp))
-
-                    SettingToggleRow(
-                        title = "Highlight top voted movie",
-                        description = "Show a crown on the current top pick.",
-                        checked = highlightTopVoteState.value,
-                        onCheckedChange = { checked ->
-                            highlightTopVoteState.value = checked
-                            settingsPrefs.edit().putBoolean(KEY_HIGHLIGHT_TOP_VOTE, checked).apply()
-                        }
-                    )
-                }
-            }
-
             // ---- App Info ----
             Card(
                 modifier = Modifier.fillMaxWidth(),
